@@ -12,7 +12,7 @@ user_name = 'Alikhan'
 user_password = 'my_super_password'
 
 # api urls
-base_url = 'http://127.0.0.1:5000/'
+base_url = 'http://104.248.137.244:5000/'
 get_key_url = base_url + 'api/v1.0/get_key'
 get_file_url = base_url + 'api/v1.0/get_file'
 get_all_update_files_url = base_url + 'api/v1.0/get_all_update_files'
