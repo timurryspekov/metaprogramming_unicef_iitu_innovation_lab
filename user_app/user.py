@@ -3,7 +3,6 @@ import rsa
 from binascii import b2a_hex
 import cryptography
 import os
-import subprocess
 
 # update version
 __update_version__ = 'update_3.py'
@@ -12,6 +11,7 @@ user_name = 'Alikhan'
 user_password = 'my_super_password'
 
 # api urls
+# base_url = 'http://127.0.0.1:5000/'
 base_url = 'http://104.248.137.244:5000/'
 get_key_url = base_url + 'api/v1.0/get_key'
 get_file_url = base_url + 'api/v1.0/get_file'
@@ -35,7 +35,7 @@ def get_file(url, user_name, user_password, public_key, file_name):
     encrypted_password = b2a_hex(encrypted_password)
     # constructing params for request
     params = {'name': user_name,
-              'password': encrypted_password,
+              'password': encrypted_password.decode('utf-8'),
               'file_name': file_name}
     res = requests.get(url, json=params)
     if res.content:
@@ -64,7 +64,7 @@ def mount_update(update_name):
         lines[version_line] = f"__update_version__ = '{update_name}'\n"
         with open(update_name, 'r') as f:
             lines[begin + 1: end] = [f.read() + '\n']
-        with open(__file__, 'w') as f:
+        with open(current_file, 'w') as f:
             f.write(''.join(lines))
             os.remove(update_name)
 
@@ -86,7 +86,13 @@ def update(get_key_url, get_file_url, user_name, user_password):
             update_file_name = get_file(
                 get_file_url, user_name, user_password, public_key, last_update)
             mount_update(update_file_name)
-            subprocess.call(f"/usr/bin/python3 {__file__}", shell=True)
+
+            # Checks for OS, 'nt' is Windows
+            if os.name == 'nt':
+                os.system(f"python {__file__}")
+            else:
+                import subprocess
+                subprocess.call(f"/usr/bin/python3 {__file__}", shell=True)
             return True
 
 is_updated = False
@@ -96,6 +102,7 @@ except Exception as e:
     pass
 
 if is_updated:
+    print("It's Updated")
     exit()
 
 

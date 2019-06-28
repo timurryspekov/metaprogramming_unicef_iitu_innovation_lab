@@ -37,7 +37,6 @@ def get_key():
 
 @app.route('/api/v1.0/get_file', methods=['GET', 'POST'])
 def get_file():
-
     if not request.json or not 'name' in request.json or not 'password' in request.json:
         abort(400)
 
@@ -49,12 +48,16 @@ def get_file():
             decrypted_password = a2b_hex(request.json['password'])
             update_name = request.json['file_name']
             update_path = os.path.join(updates_dir, update_name)
-            encrypted_file_path = os.path.join(updates_dir, f'{update_name}_{user_name}.py')
+            encrypted_file_path = os.path.join(updates_dir, f'{user_name}_{update_name}')
             private_key = dict_users[user_name]
             decrypted_pasword = rsa.decrypt(decrypted_password, private_key).decode('utf-8')
             key = cryptography.gethash(str(decrypted_pasword))
             cryptography.encrypt_file(key, update_path, encrypted_file_path)
-            result = send_file(encrypted_file_path)
+
+            # Changed from send_file() to manual way because of Windows problem with file removing
+            with open(encrypted_file_path, 'rb') as f:
+                result = f.read()
+                
             os.remove(encrypted_file_path)
             return result, 201
     except Exception as e:
