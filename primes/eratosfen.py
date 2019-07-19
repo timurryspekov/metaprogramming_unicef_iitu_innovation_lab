@@ -32,10 +32,11 @@ def boost_eratosfen(n):
     i = 0
     limit_sqrt = n ** 0.5
     while numbers[i] <= limit_sqrt:
-        for j in range(i, len(numbers)):
-            if numbers[j] * numbers[i] > n:
-                break
-            is_prime[numbers[j] * numbers[i]] = False
+        if is_prime[numbers[i]]:
+            for j in range(i, len(numbers)):
+                if numbers[j] * numbers[i] > n:
+                    break
+                is_prime[numbers[j] * numbers[i]] = False
         i += 1
 
     result = [i for i in range(len(is_prime)) if is_prime[i]]

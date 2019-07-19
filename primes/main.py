@@ -3,10 +3,7 @@ import time
 from atkin import atkins, my_atkin
 from eratosfen import eratosfen, boost_eratosfen
 
-import gc
-gc.collect()
-
-limit = 100000000
+limit = 10000000
 
 # # Atkin
 # start_time = time.time()
@@ -20,13 +17,13 @@ eratosfens_primes = eratosfen(limit)
 end_time = time.time()
 print(f"Eratosfen: limit = {limit}, time: {end_time - start_time}")
 
-gc.collect()
-
 # Eratosfen Boosted
 start_time = time.time()
 eratosfens_boost_primes = boost_eratosfen(limit)
 end_time = time.time()
 print(f"Eratosfen boosted: limit = {limit}, time: {end_time - start_time}")
 
-print(eratosfens_primes == eratosfens_boost_primes)
+# print(eratosfens_primes)
+# print(eratosfens_boost_primes)
 
+print(eratosfens_primes == eratosfens_boost_primes)
